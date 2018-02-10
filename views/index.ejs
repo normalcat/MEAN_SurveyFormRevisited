@@ -1,0 +1,53 @@
+<html>
+
+<!--<link rel='stylesheet' href='/stylesheets/style.css'>-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type ="text/javascript">
+         $(document). ready(function (){
+            var socket  = io.connect();
+
+            $('#button').click(function(e){
+                    socket.emit('posting_form',{
+                    name:$('#name').val(),
+                    location:$('#location').val(),
+                    language:$('#language').val(),
+                    message:$('#message').val()
+                })
+            });
+
+            socket.on( "updated_message", function (data){
+                console.log( "You emitted the following information to the server { name: "  + data.response.name + ", location: " + data.response.location + ", language: " + data.response.language + ", Comment: " + data.response.message + "}");
+            });
+
+            socket.on( "random_number", function (data){
+                console.log( 'The lucky number emitted by the server is '  + data.random_number );
+            });
+
+            socket.on("server_responded",function (data){
+                console.log("This is what server responsed : " + data.response);
+            })
+        })
+    </script>
+
+<form action='/process' method='POST'><br>
+	My Name: <input type="text" id = "name"><br><br>
+    Dojo Location: <select id = "location">
+    	<option value = "Mountain View"> Mountain View </option>
+    	<option value = "Seatle"> Seatle </option>
+    	<opiton value = "New York"> New York </option>
+    	<opiton value = "Chinese"> Chinese </option>
+    	</select><br><br>
+    Favorite Language: <select id="language">
+    	<option value="Java Script"> Java Script </option>
+    	<option value="Node"> Node </option>
+    	<option value = "Mountain View"> Mountain View </option>
+    	</select><br><br>
+    Comment (optional):<br>
+    <textarea id = "message" style="width:300px; height:50px">
+
+	</textarea><br><br>
+	<!--<button type="button" class="btn btn-primary">Submit</button>-->
+</form>
+<button id="button">Submit</button>
+</html>
